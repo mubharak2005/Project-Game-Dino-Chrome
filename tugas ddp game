@@ -1,0 +1,82 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+
+// Fungsi untuk mengocok dadu
+int rollDice() {
+    return rand() % 6 + 1;
+}
+
+// Fungsi untuk memindahkan pemain
+int movePlayer(int player, int steps) {
+    player += steps;
+    return player;
+}
+
+// Fungsi untuk mengecek apakah pemain mendapatkan ular atau tangga
+int checkSnakeOrLadder(int player) {
+    int snakes[][2] = { {16, 6}, {47, 26}, {49, 11}, {56, 53}, {62, 19}, {64, 60}, {87, 24}, {93, 73}, {95, 75}, {98, 78} };
+    int ladders[][2] = { {1, 38}, {4, 14}, {9, 31}, {21, 42}, {28, 84}, {36, 44}, {51, 67}, {71, 91}, {80, 100} };
+
+    for (int i = 0; i < 10; ++i) {
+        if (player == snakes[i][0]) {
+            std::cout << "Oh tidak! Kamu terkena ular!" << std::endl;
+            return snakes[i][1];
+        } else if (player == ladders[i][0]) {
+            std::cout << "Selamat! Kamu mendapatkan tangga!" << std::endl;
+            return ladders[i][1];
+        }
+    }
+
+    return player;
+}
+
+// Fungsi untuk menjalankan game
+void playGame() {
+    int player1 = 0;
+    int player2 = 0;
+
+    while (true) {
+        // Giliran pemain 1
+        std::cout << "Giliran Pemain 1" << std::endl;
+        std::cout << "Tekan Enter untuk mengocok dadu...";
+        std::cin.ignore();
+        int diceRoll = rollDice();
+        std::cout << "Kamu mendapatkan angka " << diceRoll << std::endl;
+        player1 = movePlayer(player1, diceRoll);
+        player1 = checkSnakeOrLadder(player1);
+        std::cout << "Pemain 1 berada di petak " << player1 << std::endl;
+
+        // Cek apakah pemain 1 menang
+        if (player1 >= 100) {
+            std::cout << "Pemain 1 menang!" << std::endl;
+            break;
+        }
+
+        // Giliran pemain 2
+        std::cout << "Giliran Pemain 2" << std::endl;
+        std::cout << "Tekan Enter untuk mengocok dadu...";
+        std::cin.ignore();
+        diceRoll = rollDice();
+        std::cout << "Kamu mendapatkan angka " << diceRoll << std::endl;
+        player2 = movePlayer(player2, diceRoll);
+        player2 = checkSnakeOrLadder(player2);
+        std::cout << "Pemain 2 berada di petak " << player2 << std::endl;
+
+        // Cek apakah pemain 2 menang
+        if (player2 >= 100) {
+            std::cout << "Pemain 2 menang!" << std::endl;
+            break;
+        }
+    }
+}
+
+int main() {
+    // Inisialisasi generator angka acak
+    srand(time(0));
+
+    // Memulai permainan
+    playGame();
+
+    return 0;
+}
