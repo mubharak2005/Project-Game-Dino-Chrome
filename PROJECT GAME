@@ -271,3 +271,70 @@ private void configureObstacle(ImageView obstacle, double x) {
             }
         }
     }
+private void updateScore() {
+    double dinoRight = dino.getLayoutX() + dino.getFitWidth();
+
+    if (batu.isVisible()&&batu.isManaged()) {
+        double batuRight = batu.getLayoutX() + batu.getFitWidth();
+        if (dinoRight > batuRight) {
+            score++;
+            batu.setManaged(false);
+        }
+    }
+
+    if (kaktus.isVisible()&& kaktus.isManaged()) {
+        double kaktusRight = kaktus.getLayoutX() + kaktus.getFitWidth();
+        if (dinoRight > kaktusRight) {
+            score++;
+            kaktus.setManaged(false);
+        }
+    }
+    scoreLabel.setText("Score: " + score);
+}
+    @FXML
+    private void restartGame() {
+        isGameRunning = true;
+        score = 0;
+        scoreLabel.setText("Score: 0");
+        scoreLabel.setLayoutX(10);
+        scoreLabel.setLayoutY(10);
+        scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: normal; -fx-text-fill: black; -fx-alignment: center;");
+
+        restartButton.setVisible(false);
+        dino.requestFocus();
+
+        kaktus.setLayoutX(700);
+        kaktus.setVisible(false);
+        kaktus.setManaged(true);
+        batu.setLayoutX(800);
+        batu.setVisible(false);
+        batu.setManaged(true);
+
+        obstacleSpeed = 5.0;
+        lastUpdateTime = System.nanoTime();
+        lastSpawnTime = System.nanoTime();
+    }
+    
+    private void loadHighScore() {
+    try (BufferedReader reader = new BufferedReader(new FileReader("leaderboard.txt"))) {
+        highScore = Integer.parseInt(reader.readLine());
+    } catch (IOException | NumberFormatException e) {
+        highScore = 0;
+    }
+}
+
+private void saveHighScore() {
+    if (score > highScore) {
+        highScore = score;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("leaderboard.txt"))) {
+            writer.write(String.valueOf(highScore));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+    @FXML
+    void downDINO(KeyEvent event) {}
+    @FXML
+    void moveDINO(KeyEvent event) {}
