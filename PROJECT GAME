@@ -149,3 +149,125 @@ public class MainGameController {
         
         gameLoop.start();
     }
+
+private void configureObstacle(ImageView obstacle, double x) {
+        obstacle.setFitWidth(90);
+        obstacle.setFitHeight(60);
+        obstacle.setLayoutX(x);
+        obstacle.setLayoutY(440);
+        obstacle.setPreserveRatio(true);
+    }
+
+    private void moveObstacle(ImageView obstacle) {
+        if (obstacle.isVisible()) {
+            obstacle.setLayoutX(obstacle.getLayoutX() - obstacleSpeed);
+
+            if (obstacle.getLayoutX() + obstacle.getFitWidth() < 0) {
+                obstacle.setVisible(false);
+            }
+        }
+    }
+
+    private void spawnObstacle() {
+        if (!kaktus.isVisible() && !batu.isVisible()) {
+            if (random.nextBoolean()) {
+                kaktus.setLayoutX(gameArea.getPrefWidth());
+                kaktus.setVisible(true);
+                kaktus.setManaged(true);
+            } else {
+                batu.setLayoutX(gameArea.getPrefWidth());
+                batu.setVisible(true);
+                batu.setManaged(true);
+            }
+            ensureMinDistance();
+        }
+    }
+
+    private void ensureMinDistance() {
+        if (Math.abs(kaktus.getLayoutX() - batu.getLayoutX()) < 150) {
+            if(kaktus.isVisible()){
+                batu.setLayoutX(kaktus.getLayoutX() + 200);
+            }else if (batu.isVisible()) {
+                kaktus.setLayoutX(batu.getLayoutX() + 200);
+            }
+        }
+    }
+
+    private void increaseObstacleSpeed() {
+        obstacleSpeed += 0.1;
+    }
+
+    private void updateDinoPosition() {
+        velocityY += GRAVITY;
+
+        if(dino.getLayoutY() <= 250){
+            dir = Dir.botbot;
+        }
+
+        if(isDown) dino.setLayoutY(dino.getLayoutY() + 9);
+
+        if(dir == Dir.upup){
+            dino.setLayoutY(dino.getLayoutY() - 13);
+        }
+        else if(dir == Dir.botbot){
+            dino.setLayoutY(dino.getLayoutY() + velocityY);
+        }
+
+        if (dino.getLayoutY() > 400) {
+            dino.setLayoutY(400);
+            velocityY = 0;
+        }
+    }
+
+    private void handleKeyPress(KeyEvent event) {
+        switch (event.getCode()) {
+            case UP:
+                if (dino.getLayoutY() == 400 ) dir = Dir.upup;
+                isDown = false;
+                break;
+            case DOWN:
+                dir = Dir.botbot;
+                isDown = true;
+                break;
+            case P:
+                isGameRunning=!isGameRunning;
+                break;
+            case SPACE:
+            if(!isGameRunning){
+                restartGame();
+            }
+        }
+    }
+
+    private void checkCollision() {
+        double dinoLeft = dino.getLayoutX();
+        double dinoRight = dinoLeft + dino.getFitWidth();
+        double dinoTop = dino.getLayoutY();
+        double dinoBottom = dinoTop + dino.getFitHeight();
+
+        if (kaktus.isVisible()) {
+            double kaktusLeft = kaktus.getLayoutX() + 40;
+            double kaktusRight = kaktusLeft + kaktus.getFitWidth() - 80;
+            double kaktusTop = kaktus.getLayoutY() + 8 ;
+            double kaktusBottom = kaktusTop + kaktus.getFitHeight();
+
+            if (dinoRight > kaktusLeft && dinoLeft < kaktusRight &&
+                dinoBottom > kaktusTop && dinoTop < kaktusBottom) {
+                isGameRunning = false;
+                gameOver();
+                return;
+            }
+        }
+
+        if (batu.isVisible()) {
+            double batuLeft = batu.getLayoutX() + 40;
+            double batuRight = batuLeft + batu.getFitWidth() - 80;
+            double batuTop = batu.getLayoutY() + 5;
+            double batuBottom = batuTop + batu.getFitHeight();
+
+            if (dinoRight > batuLeft && dinoLeft < batuRight &&
+                dinoBottom > batuTop && dinoTop < batuBottom) {
+               gameOver();
+            }
+        }
+    }
