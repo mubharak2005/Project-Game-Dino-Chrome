@@ -338,3 +338,61 @@ private void saveHighScore() {
     void downDINO(KeyEvent event) {}
     @FXML
     void moveDINO(KeyEvent event) {}
+
+private void gameOver() {
+        isGameRunning = false;
+        saveHighScore();
+        message.setPesan("    Game Over!\nFinal Score: ");
+        scoreLabel.setText(message.getPesan() + score+"\nPress SPACE to Restart");
+
+        scoreLabel.setLayoutX(347);
+        scoreLabel.setLayoutY(174);
+
+        scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: brown; -fx-alignment: center;");
+
+        restartButton.setVisible(true);
+
+        alertalert.setPesan("GAME OVER");
+        message.setPesan("Thank you for playing, your score : ");
+
+        showAlert(Alert.AlertType.INFORMATION, alertalert.getPesan(), message.getPesan() + score );
+        showAlert(Alert.AlertType.INFORMATION, "Game Over", "Final Score: " + score + "\nHigh Score: " + highScore);
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    abstract class Write{
+        String pesan;
+        public abstract void setPesan(String pesan);
+        public abstract String getPesan();
+    }
+
+    class Message extends Write{
+        @Override
+        public void setPesan(String pesan){
+            this.pesan = pesan;
+        }
+        @Override
+        public String getPesan(){
+            return pesan;
+        }
+    }
+
+    class AlertAlert extends Write{
+        @Override
+        public void setPesan(String pesan){
+            this.pesan = pesan;
+        }
+
+        @Override
+        public String getPesan(){
+            return pesan;
+        }
+    }
+}
