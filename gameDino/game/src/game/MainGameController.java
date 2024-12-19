@@ -378,3 +378,16 @@ private void saveHighScore() {
             return pesan;
         }
     }
+
+class AlertAlert extends Write{
+        @Override
+        public void setPesan(String pesan){
+            this.pesan = pesan;
+        }
+
+        @Override
+        public String getPesan(){
+            return pesan;
+        }
+    }
+}
