@@ -238,3 +238,79 @@ private void configureObstacle(ImageView obstacle, double x) {
             }
         }
     }
+private void checkCollision() {
+        double dinoLeft = dino.getLayoutX();
+        double dinoRight = dinoLeft + dino.getFitWidth();
+        double dinoTop = dino.getLayoutY();
+        double dinoBottom = dinoTop + dino.getFitHeight();
+
+        if (kaktus.isVisible()) {
+            double kaktusLeft = kaktus.getLayoutX() + 40;
+            double kaktusRight = kaktusLeft + kaktus.getFitWidth() - 80;
+            double kaktusTop = kaktus.getLayoutY() + 8 ;
+            double kaktusBottom = kaktusTop + kaktus.getFitHeight();
+
+            if (dinoRight > kaktusLeft && dinoLeft < kaktusRight &&
+                dinoBottom > kaktusTop && dinoTop < kaktusBottom) {
+                isGameRunning = false;
+                gameOver();
+                return;
+            }
+        }
+
+        if (batu.isVisible()) {
+            double batuLeft = batu.getLayoutX() + 40;
+            double batuRight = batuLeft + batu.getFitWidth() - 80;
+            double batuTop = batu.getLayoutY() + 5;
+            double batuBottom = batuTop + batu.getFitHeight();
+
+            if (dinoRight > batuLeft && dinoLeft < batuRight &&
+                dinoBottom > batuTop && dinoTop < batuBottom) {
+               gameOver();
+            }
+        }
+    }
+
+private void updateScore() {
+    double dinoRight = dino.getLayoutX() + dino.getFitWidth();
+
+    if (batu.isVisible()&&batu.isManaged()) {
+        double batuRight = batu.getLayoutX() + batu.getFitWidth();
+        if (dinoRight > batuRight) {
+            score++;
+            batu.setManaged(false);
+        }
+    }
+
+    if (kaktus.isVisible()&& kaktus.isManaged()) {
+        double kaktusRight = kaktus.getLayoutX() + kaktus.getFitWidth();
+        if (dinoRight > kaktusRight) {
+            score++;
+            kaktus.setManaged(false);
+        }
+    }
+    scoreLabel.setText("Score: " + score);
+}
+    @FXML
+    private void restartGame() {
+        isGameRunning = true;
+        score = 0;
+        scoreLabel.setText("Score: 0");
+        scoreLabel.setLayoutX(10);
+        scoreLabel.setLayoutY(10);
+        scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: black; -fx-alignment: center;");
+
+        restartButton.setVisible(false);
+        dino.requestFocus();
+
+        kaktus.setLayoutX(700);
+        kaktus.setVisible(false);
+        kaktus.setManaged(true);
+        batu.setLayoutX(800);
+        batu.setVisible(false);
+        batu.setManaged(true);
+
+        obstacleSpeed = 5.0;
+        lastUpdateTime = System.nanoTime();
+        lastSpawnTime = System.nanoTime();
+    }
