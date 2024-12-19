@@ -314,3 +314,21 @@ private void updateScore() {
         lastUpdateTime = System.nanoTime();
         lastSpawnTime = System.nanoTime();
     }
+private void loadHighScore() {
+    try (BufferedReader reader = new BufferedReader(new FileReader("leaderboard.txt"))) {
+        highScore = Integer.parseInt(reader.readLine());
+    } catch (IOException | NumberFormatException e) {
+        highScore = 0;
+    }
+}
+
+private void saveHighScore() {
+    if (score > highScore) {
+        highScore = score;
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("leaderboard.txt"))) {
+            writer.write(String.valueOf(highScore));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
