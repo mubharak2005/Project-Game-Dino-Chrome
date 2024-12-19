@@ -354,3 +354,27 @@ private void saveHighScore() {
         
         
     }
+   private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    abstract class Write{
+        String pesan;
+        public abstract void setPesan(String pesan);
+        public abstract String getPesan();
+    }
+
+    class Message extends Write{
+        @Override
+        public void setPesan(String pesan){
+            this.pesan = pesan;
+        }
+        @Override
+        public String getPesan(){
+            return pesan;
+        }
+    }
