@@ -332,3 +332,25 @@ private void saveHighScore() {
         }
     }
 }
+
+@FXML
+    void downDINO(KeyEvent event) {}
+    @FXML
+    void moveDINO(KeyEvent event) {}
+
+    private void gameOver() {
+        isGameRunning = false;
+        saveHighScore();
+        message.setPesan("    Game Over!\nFinal Score: ");
+        scoreLabel.setText(message.getPesan() + score+"\nPress SPACE to Restart");
+
+        scoreLabel.setLayoutX(347);
+        scoreLabel.setLayoutY(174);
+
+        scoreLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: brown; -fx-alignment: center;");
+
+        restartButton.setVisible(true);
+
+        
+        
+    }
