@@ -106,3 +106,47 @@ public class MainGameController {
     // Tambahkan ke game area sebagai elemen paling belakang
     gameArea.getChildren().add(0, background);
 }
+
+   public void initialize() {
+
+        kaktus = new ImageView(kaktusImage);
+        batu = new ImageView(batuImage);
+
+        configureObstacle(kaktus, 900);
+        configureObstacle(batu, 1100);
+
+        kaktus.setVisible(false);
+        batu.setVisible(false);
+
+        gameArea.getChildren().addAll(kaktus, batu);
+
+        root.setOnKeyPressed(this::handleKeyPress);
+
+        AnimationTimer gameLoop = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if (isGameRunning) {
+                    moveObstacle(kaktus);
+                    moveObstacle(batu);
+
+                    updateDinoPosition();
+
+                    checkCollision();
+
+                    if (now - lastSpawnTime > OBSTACLE_SPAWN_INTERVAL) {
+                        spawnObstacle();
+                        lastSpawnTime = now;
+                    }
+
+                    if (now - lastUpdateTime > SPEED_INCREASE_INTERVAL) {
+                        increaseObstacleSpeed();
+                        lastUpdateTime = now;
+                    }
+
+                    updateScore();
+                }
+            }
+        };
+        
+        gameLoop.start();
+    }
